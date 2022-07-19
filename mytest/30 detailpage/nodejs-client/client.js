@@ -1,13 +1,13 @@
 const EasySock = require('easy_sock');
 
-const protobuf = require('protocal-buffers')
+const protobuf = require('protocol-buffers')
 const fs=require('fs');
 const schemas = protobuf(fs.readFileSync(`${__dirname}/detail.proto`))
 
 const easySock = new EasySock({
     ip:'127.0.0.1',
     port:4000,
-    timeout:500,
+    // timeout:500,
     keepAlive:true
 })
 
@@ -21,7 +21,7 @@ easySock.encode = function (data,seq){
     return Buffer.concat([head,body])
 }
 easySock.decode = function (buffer){
-    const seq = buffer.readint32BE();
+    const seq = buffer.readInt32BE();
     const body = schemas.ColumnResponse.decode(buffer.slice(8));
 
     return {
@@ -33,7 +33,7 @@ easySock.isReceiveComplete = function (buffer) {
     if(buffer.length<8){
         return 0
     }
-    const bodylength = buffer.readint32BE(4);
+    const bodylength = buffer.readInt32BE(4);
 
     if(buffer.length >= bodylength + 8) {
         return bodylength + 8
