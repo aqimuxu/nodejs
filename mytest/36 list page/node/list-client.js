@@ -8,7 +8,7 @@ const easySock = new EasySock({
     ip:'127.0.0.1',
     port:4003,
     timeout:500,
-    keepalive:true
+    keepAlive:true
 })
 
 easySock.encode=function (data,seq){
@@ -22,7 +22,7 @@ easySock.encode=function (data,seq){
 }
 easySock.decode = function (buffer){
     const seq = buffer.readInt32BE();
-    const body = schemas.ListResponse.decode(buffr.slice(8));
+    const body = schemas.ListResponse.decode(buffer.slice(8));//这里之前buffer写错了，请求延时报错
 
     return {
         result:body,
